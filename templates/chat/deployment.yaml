@@ -26,4 +26,16 @@ spec:
           envFrom:
             - configMapRef:
                 name: "{{ .Values.chatService.name }}-env"
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-app-password
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: jwt-secret
+                
       restartPolicy: Always

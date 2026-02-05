@@ -5,25 +5,28 @@ metadata:
   labels:
     app: db
 data:
-  init.sql: |-
-    DO $$
-    BEGIN
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'admin') THEN
-            CREATE USER {{ .Values.db.admin.user }} WITH PASSWORD '{{ .Values.db.admin.password }}';
+  init.sh: |-
+    #!/bin/bash
+    set -e
+    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOF
+      DO \$\$
+      BEGIN
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '$ADMIN_USER') THEN
+          CREATE USER "$ADMIN_USER" WITH PASSWORD '$ADMIN_PASSWORD';
         END IF;
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'app') THEN
-            CREATE USER {{ .Values.db.app.user }} WITH PASSWORD '{{ .Values.db.app.password }}';
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '$APP_USER') THEN
+          CREATE USER "$APP_USER" WITH PASSWORD '$APP_PASSWORD';
         END IF;
-        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'readonly') THEN
-            CREATE USER {{ .Values.db.readonly.user }} WITH PASSWORD '{{ .Values.db.readonly.password }}';
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = '$READONLY_USER') THEN
+          CREATE USER "$READONLY_USER" WITH PASSWORD '$READONLY_PASSWORD';
         END IF;
-    END
-    $$;
+      END
+      \$\$;
+      GRANT CONNECT ON DATABASE "$POSTGRES_DB" TO "$ADMIN_USER", "$APP_USER", "$READONLY_USER";
+      GRANT CREATE ON DATABASE "$POSTGRES_DB" TO "$ADMIN_USER";
 
-    GRANT CONNECT ON DATABASE {{ .Values.db.name | quote }} TO {{ .Values.db.admin.user }}, {{ .Values.db.app.user }}, {{ .Values.db.readonly.user }};
-    GRANT CREATE ON DATABASE {{ .Values.db.name | quote }} TO {{ .Values.db.admin.user }};
-
-    CREATE SCHEMA IF NOT EXISTS core;
-    ALTER SCHEMA core OWNER TO {{ .Values.db.admin.user }};
-    ALTER USER {{ .Values.db.admin.user }} SET search_path TO core, public;
+      CREATE SCHEMA IF NOT EXISTS core;
+      ALTER SCHEMA core OWNER TO "$ADMIN_USER";
+      ALTER USER "$ADMIN_USER" SET search_path TO core, public;
+    EOF
 

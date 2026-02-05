@@ -28,5 +28,8 @@ spec:
             - name: DB_CHAT_BOT_USER
               value: {{ .Values.db.admin.user }}
             - name: DB_CHAT_BOT_PASSWORD
-              value: {{ .Values.db.admin.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-admin-password
       restartPolicy: OnFailure

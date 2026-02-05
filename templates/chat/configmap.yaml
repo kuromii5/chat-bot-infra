@@ -7,10 +7,8 @@ data:
   DB_NAME: {{ .Values.db.name }}
   DB_PORT: "{{ .Values.db.port }}"
   DB_USER: {{ .Values.db.app.user }}
-  DB_PASSWORD: {{ .Values.db.app.password }}
   DB_SSLMODE: {{ .Values.db.sslmode }}
 
-  JWT_SECRET: {{ .Values.chatService.jwt.secret }}
   LOG_LEVEL: {{ .Values.chatService.logLevel }}
 
   RABBITMQ_EXCHANGE: {{ .Values.rabbitmq.exchange }}

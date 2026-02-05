@@ -23,10 +23,39 @@ spec:
           env:
             - name: POSTGRES_DB
               value: {{ .Values.db.name }}
-            - name: POSTGRES_PASSWORD
-              value: {{ .Values.db.superuser.password }}
+
             - name: POSTGRES_USER
               value: {{ .Values.db.superuser.user }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-superuser-password
+
+            - name: ADMIN_USER
+              value: {{ .Values.db.admin.user }}
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-admin-password
+              
+            - name: APP_USER
+              value: {{ .Values.db.app.user }}
+            - name: APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-app-password
+
+            - name: READONLY_USER
+              value: {{ .Values.db.readonly.user }}
+            - name: READONLY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: db-readonly-password
+
           # livenessProbe:
           #   exec:
           #     command:
@@ -35,9 +64,9 @@ spec:
           #   periodSeconds: 1
           #   timeoutSeconds: 2
           volumeMounts:
-            - mountPath: /docker-entrypoint-initdb.d/init.sql
+            - mountPath: /docker-entrypoint-initdb.d/init.sh
               name: db-init-volume
-              subPath: init.sql
+              subPath: init.sh
             - mountPath: /var/lib/postgresql/data
               name: pg-data
       restartPolicy: Always
@@ -46,8 +75,8 @@ spec:
           configMap:
             name: db-init-cm
             items:
-              - key: init.sql
-                path: init.sql
+              - key: init.sh
+                path: init.sh
         - name: pg-data
           persistentVolumeClaim:
             claimName: pg-data

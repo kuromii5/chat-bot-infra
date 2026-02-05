@@ -23,7 +23,10 @@ spec:
             - containerPort: {{ .Values.rabbitmq.port }}
           env:
             - name: RABBITMQ_DEFAULT_PASS
-              value: {{ .Values.rabbitmq.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: rabbitmq-password
             - name: RABBITMQ_DEFAULT_USER
               value: {{ .Values.rabbitmq.user }}
           # livenessProbe:

@@ -11,22 +11,20 @@ db:
   name: chat-bot-db
   host: db-service
   image: postgres:18-alpine
-  user: postgres
-  password: password
   port: 5432
   sslmode: disable
   superuser:
     user: postgres
-    password: password
+    password: ""
   admin:
     user: admin
-    password: password
+    password: ""
   app:
     user: app
-    password: password
+    password: ""
   readonly:
     user: readonly
-    password: password
+    password: ""
 
 migrator:
   image: migrator:latest
@@ -36,8 +34,8 @@ rabbitmq:
   host: rabbitmq-service # for Service
   image: rabbitmq:3-management-alpine
   user: admin
-  password: password
-  exchange: chat_bot_exchange
+  password: ""
+  exchange: chat-bot-exchange
   port: 5672
   managementPort: 15672
 
@@ -47,7 +45,7 @@ authService:
   image: auth-service:latest
   port: 8080
   jwt:
-    secret: "your-secret-key-change-in-production"
+    secret: ""
     accessTokenExpiry: "30m"
     refreshTokenExpiry: "360h"
   logLevel: "info"
@@ -59,6 +57,6 @@ chatService:
   image: chat-service:latest
   port: 8081
   jwt:
-    secret: "your-secret-key-change-in-production"
+    secret: ""
   logLevel: "info"
   serverHost: "0.0.0.0"
