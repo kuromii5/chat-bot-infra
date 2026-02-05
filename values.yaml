@@ -1,0 +1,64 @@
+global:
+  imagePullPolicy: IfNotPresent
+
+gateway:
+  name: gateway
+  host: gateway-service
+  image: nginx:alpine
+  port: 80
+
+db:
+  name: chat-bot-db
+  host: db-service
+  image: postgres:18-alpine
+  user: postgres
+  password: password
+  port: 5432
+  sslmode: disable
+  superuser:
+    user: postgres
+    password: password
+  admin:
+    user: admin
+    password: password
+  app:
+    user: app
+    password: password
+  readonly:
+    user: readonly
+    password: password
+
+migrator:
+  image: migrator:latest
+
+rabbitmq:
+  name: chat-bot-rabbitmq # for Deployment
+  host: rabbitmq-service # for Service
+  image: rabbitmq:3-management-alpine
+  user: admin
+  password: password
+  exchange: chat_bot_exchange
+  port: 5672
+  managementPort: 15672
+
+authService:
+  name: auth-service
+  host: auth-service
+  image: auth-service:latest
+  port: 8080
+  jwt:
+    secret: "your-secret-key-change-in-production"
+    accessTokenExpiry: "30m"
+    refreshTokenExpiry: "360h"
+  logLevel: "info"
+  serverHost: "0.0.0.0"
+
+chatService:
+  name: chat-service
+  host: chat-service
+  image: chat-service:latest
+  port: 8081
+  jwt:
+    secret: "your-secret-key-change-in-production"
+  logLevel: "info"
+  serverHost: "0.0.0.0"

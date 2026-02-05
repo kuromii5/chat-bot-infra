@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.chatService.host }}
+spec:
+  ports:
+    - name: "{{ .Values.chatService.port }}"
+      port: {{ .Values.chatService.port }}
+      targetPort: {{ .Values.chatService.port }}
+  selector:
+    app: chat

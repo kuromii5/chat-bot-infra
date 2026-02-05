@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.rabbitmq.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq-container
+          image: {{ .Values.rabbitmq.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.rabbitmq.managementPort }}
+            - containerPort: {{ .Values.rabbitmq.port }}
+          env:
+            - name: RABBITMQ_DEFAULT_PASS
+              value: {{ .Values.rabbitmq.password }}
+            - name: RABBITMQ_DEFAULT_USER
+              value: {{ .Values.rabbitmq.user }}
+          # livenessProbe:
+          #   exec:
+          #     command:
+          #       - rabbitmq-diagnostics -q ping
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          # readinessProbe:
+          #   exec:
+          #     command:
+          #       - rabbitmq-diagnostics -q ping
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
+          volumeMounts:
+            - mountPath: /var/lib/rabbitmq
+              name: rabbitmq-data
+          # resources:
+          #   requests:
+          #     memory: 256Mi
+          #     cpu: 100m
+          #   limits:
+          #     memory: 1024Mi
+          #     cpu: 500m
+      restartPolicy: Always
+      volumes:
+        - name: rabbitmq-data
+          persistentVolumeClaim:
+            claimName: rabbitmq-data

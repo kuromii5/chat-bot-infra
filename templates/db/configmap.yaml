@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-cm
+  labels:
+    app: db
+data:
+  init.sql: |-
+    DO $$
+    BEGIN
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'admin') THEN
+            CREATE USER {{ .Values.db.admin.user }} WITH PASSWORD '{{ .Values.db.admin.password }}';
+        END IF;
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'app') THEN
+            CREATE USER {{ .Values.db.app.user }} WITH PASSWORD '{{ .Values.db.app.password }}';
+        END IF;
+        IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'readonly') THEN
+            CREATE USER {{ .Values.db.readonly.user }} WITH PASSWORD '{{ .Values.db.readonly.password }}';
+        END IF;
+    END
+    $$;
+
+    GRANT CONNECT ON DATABASE {{ .Values.db.name | quote }} TO {{ .Values.db.admin.user }}, {{ .Values.db.app.user }}, {{ .Values.db.readonly.user }};
+    GRANT CREATE ON DATABASE {{ .Values.db.name | quote }} TO {{ .Values.db.admin.user }};
+
+    CREATE SCHEMA IF NOT EXISTS core;
+    ALTER SCHEMA core OWNER TO {{ .Values.db.admin.user }};
+    ALTER USER {{ .Values.db.admin.user }} SET search_path TO core, public;
+

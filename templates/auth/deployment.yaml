@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.authService.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:latest
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command: ['sh', '-c', "until nc -zv {{ .Values.db.host }} {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
+      containers:
+        - name: auth-container
+          image: {{ .Values.authService.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.authService.port }}
+          envFrom:
+            - configMapRef:
+                name: "{{ .Values.authService.name }}-env"
+      restartPolicy: Always

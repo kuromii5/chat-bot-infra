@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.rabbitmq.host }}
+spec:
+  ports:
+    - name: "{{ .Values.rabbitmq.managementPort }}"
+      port: {{ .Values.rabbitmq.managementPort }}
+      targetPort: {{ .Values.rabbitmq.managementPort }}
+    - name: "{{ .Values.rabbitmq.port }}"
+      port: {{ .Values.rabbitmq.port }}
+      targetPort: {{ .Values.rabbitmq.port }}
+  selector:
+    app: rabbitmq

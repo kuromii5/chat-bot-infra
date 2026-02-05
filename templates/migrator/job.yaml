@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migrator
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: migrator
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox:latest
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command: ['sh', '-c', "until nc -zv {{ .Values.db.host }} {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
+      containers:
+        - name: migrator-container
+          image: {{ .Values.migrator.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          env:
+            - name: DB_CHAT_BOT_HOST
+              value: {{ .Values.db.host }}
+            - name: DB_CHAT_BOT_NAME
+              value: {{ .Values.db.name }}
+            - name: DB_CHAT_BOT_PORT
+              value: "{{ .Values.db.port }}"
+            - name: DB_CHAT_BOT_USER
+              value: {{ .Values.db.admin.user }}
+            - name: DB_CHAT_BOT_PASSWORD
+              value: {{ .Values.db.admin.password }}
+      restartPolicy: OnFailure
