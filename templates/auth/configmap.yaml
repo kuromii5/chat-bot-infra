@@ -9,9 +9,11 @@ data:
   DB_USER: {{ .Values.db.app.user }}
   DB_SSLMODE: {{ .Values.db.sslmode}}
 
+  LOG_LEVEL: {{ .Values.authService.logLevel }}
+  
   JWT_ACCESS_TOKEN_EXPIRY: {{ .Values.authService.jwt.accessTokenExpiry }}
   JWT_REFRESH_TOKEN_EXPIRY: {{ .Values.authService.jwt.refreshTokenExpiry }}
 
-  LOG_LEVEL: {{ .Values.authService.logLevel }}
   SERVER_HOST: {{ .Values.authService.serverHost }}
   SERVER_PORT: "{{ .Values.authService.port }}"
+  METRICS_PORT: "{{ .Values.authService.metricsPort }}"

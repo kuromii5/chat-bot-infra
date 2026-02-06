@@ -16,3 +16,4 @@ data:
 
   SERVER_HOST: {{ .Values.chatService.serverHost }}
   SERVER_PORT: "{{ .Values.chatService.port }}"
+  METRICS_PORT: "{{ .Values.chatService.metricsPort }}"

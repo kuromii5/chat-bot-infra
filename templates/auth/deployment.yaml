@@ -24,7 +24,10 @@ spec:
           image: {{ .Values.authService.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           ports:
-            - containerPort: {{ .Values.authService.port }}
+            - name: http
+              containerPort: {{ .Values.authService.port }}
+            - name: metrics
+              containerPort: {{ .Values.authService.metricsPort }}
           envFrom:
             - configMapRef:
                 name: "{{ .Values.authService.name }}-env"

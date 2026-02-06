@@ -24,7 +24,10 @@ spec:
           image: {{ .Values.chatService.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
           ports:
-            - containerPort: {{ .Values.chatService.port }}
+            - name: http
+              containerPort: {{ .Values.chatService.port }}
+            - name: metrics
+              containerPort: {{ .Values.chatService.metricsPort }}
           envFrom:
             - configMapRef:
                 name: "{{ .Values.chatService.name }}-env"

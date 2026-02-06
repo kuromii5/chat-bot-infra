@@ -1,0 +1,14 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: chat-bot-monitor
+  labels:
+    release: monitoring
+spec:
+  selector:
+    matchLabels:
+      prometheus: scrape
+  endpoints:
+  - port: metrics
+    interval: 15s
+    path: /metrics

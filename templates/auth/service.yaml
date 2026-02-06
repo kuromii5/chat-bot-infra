@@ -2,10 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.authService.host }}
+  labels:
+    prometheus: scrape
 spec:
   ports:
-    - name: "{{ .Values.authService.port }}"
+    - name: http
       port: {{ .Values.authService.port }}
       targetPort: {{ .Values.authService.port }}
+    - name: metrics
+      port: {{ .Values.authService.metricsPort }}
+      targetPort: {{ .Values.authService.metricsPort }}
   selector:
     app: auth

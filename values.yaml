@@ -49,6 +49,7 @@ authService:
     accessTokenExpiry: "30m"
     refreshTokenExpiry: "360h"
   logLevel: "info"
+  metricsPort: 9000
   serverHost: "0.0.0.0"
 
 chatService:
@@ -59,4 +60,5 @@ chatService:
   jwt:
     secret: ""
   logLevel: "info"
+  metricsPort: 9000
   serverHost: "0.0.0.0"
