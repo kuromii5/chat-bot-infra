@@ -13,7 +13,5 @@ down:
 
 clean: down
 	kubectl delete pvc --all
-	kubectl delete jobs --all || true
-	kubectl delete secrets chat-bot-secrets || true
 
 .PHONY: all up down clean
