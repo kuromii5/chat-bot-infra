@@ -12,6 +12,8 @@ spec:
       labels:
         app: auth
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
       initContainers:
         - name: wait-for-db
           image: busybox:latest
