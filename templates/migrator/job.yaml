@@ -9,6 +9,8 @@ spec:
       labels:
         app: migrator
     spec:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
       initContainers:
         - name: wait-for-db
           image: busybox:latest
