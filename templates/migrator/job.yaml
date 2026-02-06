@@ -25,11 +25,21 @@ spec:
               value: {{ .Values.db.name }}
             - name: DB_CHAT_BOT_PORT
               value: "{{ .Values.db.port }}"
-            - name: DB_CHAT_BOT_USER
+            - name: DB_CHAT_BOT_SSLMODE
+              value: {{ .Values.db.sslmode }}
+
+            - name: ADMIN_USER
               value: {{ .Values.db.admin.user }}
-            - name: DB_CHAT_BOT_PASSWORD
+            - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: chat-bot-secrets
                   key: db-admin-password
+              
+            - name: APP_USER
+              value: {{ .Values.db.app.user }}
+
+            - name: READONLY_USER
+              value: {{ .Values.db.readonly.user }}
+
       restartPolicy: OnFailure
