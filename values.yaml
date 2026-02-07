@@ -42,7 +42,7 @@ rabbitmq:
 authService:
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.0
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.1
   port: 8080
   jwt:
     secret: ""
@@ -55,7 +55,7 @@ authService:
 chatService:
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.0
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.1
   port: 8081
   jwt:
     secret: ""
