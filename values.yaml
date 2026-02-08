@@ -9,6 +9,7 @@ gateway:
 
 ingress:
   host: chat-bot.local
+  monitoringHost: monitoring.local
 
 db:
   name: chat-bot-db

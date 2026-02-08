@@ -24,6 +24,10 @@ monitor-install:
 		--set alertmanager.enabled=false \
 		--set prometheus-node-exporter.enabled=true \
 		--set kube-state-metrics.enabled=true \
+		--set grafana."grafana.ini".server.root_url="http://monitoring.local/grafana/" \
+		--set grafana."grafana.ini".server.serve_from_sub_path=true \
+		--set prometheus.prometheusSpec.externalUrl="http://monitoring.local/prometheus" \
+		--set prometheus.prometheusSpec.routePrefix="/" \
 		--create-namespace
 
 port-grafana:
