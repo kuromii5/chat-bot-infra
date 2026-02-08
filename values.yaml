@@ -7,6 +7,9 @@ gateway:
   image: nginx:alpine
   port: 80
 
+ingress:
+  host: chat-bot.local
+
 db:
   name: chat-bot-db
   host: db-service

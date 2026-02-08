@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: chat-bot-monitor
+  name: {{ .Release.Name }}-service-monitor
   labels:
     release: monitoring
 spec:
