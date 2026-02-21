@@ -80,6 +80,7 @@ kube-state-metrics:
 
 grafana:
   defaultDashboardsEnabled: false
+  adminPassword: "admin"
   grafana.ini:
     server:
       domain: monitoring.local

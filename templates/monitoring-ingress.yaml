@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-monitoring-ingress
+  name: "{{ .Release.Name }}-monitoring-ingress"
   annotations:
     spec.ingressClassName: nginx
 spec:
