@@ -46,7 +46,7 @@ rabbitmq:
 authService:
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.1
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.3
   port: 8080
   jwt:
     secret: ""
@@ -59,7 +59,7 @@ authService:
 chatService:
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.1
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.3
   port: 8081
   jwt:
     secret: ""
@@ -79,6 +79,18 @@ kube-state-metrics:
   enabled: true
 
 grafana:
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway.default.svc.cluster.local
+      isDefault: false
+      version: 1
+      editable: true
+      jsonData:
+        httpHeaderName1: "X-Scope-OrgID"
+      secureJsonData:
+        httpHeaderValue1: "1"
   defaultDashboardsEnabled: false
   adminPassword: "admin"
   grafana.ini:
