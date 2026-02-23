@@ -17,3 +17,6 @@ data:
   SERVER_HOST: {{ .Values.chatService.serverHost }}
   SERVER_PORT: "{{ .Values.chatService.port }}"
   METRICS_PORT: "{{ .Values.chatService.metricsPort }}"
+
+  TRACING_ENDPOINT: {{ .Values.chatService.tracing.endpoint }}
+  TRACING_SAMPLER: "{{ .Values.chatService.tracing.sampler }}"

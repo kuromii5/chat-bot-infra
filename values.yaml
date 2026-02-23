@@ -10,6 +10,7 @@ gateway:
 ingress:
   host: chat-bot.local
   monitoringHost: monitoring.local
+  jaegerHost: jaeger.local
 
 db:
   name: chat-bot-db
@@ -57,6 +58,9 @@ authService:
   serverHost: "0.0.0.0"
 
 chatService:
+  tracing:
+    endpoint: "otel-collector.default.svc.cluster.local:4317"
+    sampler: 1.0
   name: chat-service
   host: chat-service
   image: ghcr.io/kuromii5/chat-bot-chat-service:v1.3
