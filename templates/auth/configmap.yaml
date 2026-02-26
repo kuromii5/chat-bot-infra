@@ -17,3 +17,6 @@ data:
   SERVER_HOST: {{ .Values.authService.serverHost }}
   SERVER_PORT: "{{ .Values.authService.port }}"
   METRICS_PORT: "{{ .Values.authService.metricsPort }}"
+
+  TRACING_ENDPOINT: {{ .Values.authService.tracing.endpoint }}
+  TRACING_SAMPLER: "{{ .Values.authService.tracing.sampler }}"

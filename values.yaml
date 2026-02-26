@@ -45,6 +45,9 @@ rabbitmq:
   managementPort: 15672
 
 authService:
+  tracing:
+    endpoint: "otel-collector.default.svc.cluster.local:4317"
+    sampler: 1.0
   name: auth-service
   host: auth-service
   image: ghcr.io/kuromii5/chat-bot-auth-service:v1.3
