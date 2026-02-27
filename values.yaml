@@ -50,7 +50,7 @@ authService:
     sampler: 1.0
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.4
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.6
   port: 8080
   jwt:
     secret: ""
@@ -66,7 +66,7 @@ chatService:
     sampler: 1.0
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.4
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.6
   port: 8081
   jwt:
     secret: ""
