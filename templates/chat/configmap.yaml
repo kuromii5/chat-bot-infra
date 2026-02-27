@@ -3,20 +3,19 @@ kind: ConfigMap
 metadata:
   name: "{{ .Values.chatService.name }}-env"
 data:
-  DB_HOST: {{ .Values.db.host }}
-  DB_NAME: {{ .Values.db.name }}
-  DB_PORT: "{{ .Values.db.port }}"
-  DB_USER: {{ .Values.db.app.user }}
+  DB_HOST:    {{ .Values.db.host }}
+  DB_NAME:    {{ .Values.db.name }}
+  DB_PORT:    "{{ .Values.db.port }}"
+  DB_USER:    {{ .Values.db.app.user }}
   DB_SSLMODE: {{ .Values.db.sslmode }}
 
   LOG_LEVEL: {{ .Values.chatService.logLevel }}
 
   RABBITMQ_EXCHANGE: {{ .Values.rabbitmq.exchange }}
-  RABBITMQ_URL: amqp://{{ .Values.rabbitmq.user }}:{{ .Values.rabbitmq.password }}@{{ .Values.rabbitmq.host }}:{{ .Values.rabbitmq.port }}/
 
-  SERVER_HOST: {{ .Values.chatService.serverHost }}
-  SERVER_PORT: "{{ .Values.chatService.port }}"
+  SERVER_HOST:  {{ .Values.chatService.serverHost }}
+  SERVER_PORT:  "{{ .Values.chatService.port }}"
   METRICS_PORT: "{{ .Values.chatService.metricsPort }}"
 
   TRACING_ENDPOINT: {{ .Values.chatService.tracing.endpoint }}
-  TRACING_SAMPLER: "{{ .Values.chatService.tracing.sampler }}"
+  TRACING_SAMPLER:  "{{ .Values.chatService.tracing.sampler }}"

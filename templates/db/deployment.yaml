@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.db.name }}
-  annotations:
-    "helm.sh/chart-weight": "1"
 spec:
   replicas: 1
   selector:
@@ -41,7 +39,7 @@ spec:
                 secretKeyRef:
                   name: chat-bot-secrets
                   key: db-admin-password
-              
+
             - name: APP_USER
               value: {{ .Values.db.app.user }}
             - name: APP_PASSWORD
@@ -58,13 +56,27 @@ spec:
                   name: chat-bot-secrets
                   key: db-readonly-password
 
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #       - pg_isready -U {{ .Values.db.user }} -d {{ .Values.db.name }}
-          #   failureThreshold: 3
-          #   periodSeconds: 1
-          #   timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - {{ .Values.db.superuser.user }}
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - {{ .Values.db.superuser.user }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
           volumeMounts:
             - mountPath: /docker-entrypoint-initdb.d/init.sh
               name: db-init-volume

@@ -14,6 +14,15 @@ SECRETS       = secrets-local.yaml
 prepare:
 	@minikube status > /dev/null 2>&1 || minikube start
 
+# Create GHCR pull secret for private image access.
+# Usage: GHCR_USER=yourname GHCR_TOKEN=ghp_xxx make pull-secret
+pull-secret:
+	kubectl create secret docker-registry ghcr-pull-secret \
+		--docker-server=ghcr.io \
+		--docker-username=$(GHCR_USER) \
+		--docker-password=$(GHCR_TOKEN) \
+		--dry-run=client -o yaml | kubectl apply -f -
+
 all: prepare clean obs-install up
 
 up:
@@ -62,4 +71,4 @@ otel-install:
 	helm upgrade --install $(OTEL_RELEASE_NAME) open-telemetry/opentelemetry-collector \
 		-n default -f $(OTEL_VALUES)
 
-.PHONY: prepare all up down clean obs-install otel-install jaeger-install loki-install prometheus-stack-install repo-add
+.PHONY: prepare pull-secret all up down clean obs-install otel-install jaeger-install loki-install prometheus-stack-install repo-add

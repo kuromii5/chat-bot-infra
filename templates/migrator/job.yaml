@@ -3,7 +3,9 @@ kind: Job
 metadata:
   name: migrator
   annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "2"
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   backoffLimit: 3
   template:
@@ -15,9 +17,9 @@ spec:
         - name: ghcr-pull-secret
       initContainers:
         - name: wait-for-db
-          image: busybox:latest
+          image: {{ .Values.db.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
-          command: ['sh', '-c', "until nc -zv {{ .Values.db.host }} {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
+          command: ['sh', '-c', "until pg_isready -h {{ .Values.db.host }} -p {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
       containers:
         - name: migrator-container
           image: {{ .Values.migrator.image }}
@@ -39,7 +41,7 @@ spec:
                 secretKeyRef:
                   name: chat-bot-secrets
                   key: db-admin-password
-              
+
             - name: APP_USER
               value: {{ .Values.db.app.user }}
 

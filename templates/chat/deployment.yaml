@@ -16,9 +16,9 @@ spec:
         - name: ghcr-pull-secret
       initContainers:
         - name: wait-for-db
-          image: busybox:latest
+          image: {{ .Values.db.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
-          command: ['sh', '-c', "until nc -zv {{ .Values.db.host }} {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
+          command: ['sh', '-c', "until pg_isready -h {{ .Values.db.host }} -p {{ .Values.db.port }}; do echo waiting for db; sleep 2; done;"]
       containers:
         - name: chat-container
           image: {{ .Values.chatService.image }}
@@ -28,6 +28,18 @@ spec:
               containerPort: {{ .Values.chatService.port }}
             - name: metrics
               containerPort: {{ .Values.chatService.metricsPort }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.chatService.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.chatService.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
           envFrom:
             - configMapRef:
                 name: "{{ .Values.chatService.name }}-env"
@@ -37,10 +49,14 @@ spec:
                 secretKeyRef:
                   name: chat-bot-secrets
                   key: db-app-password
+            - name: RABBITMQ_URL
+              valueFrom:
+                secretKeyRef:
+                  name: chat-bot-secrets
+                  key: rabbitmq-url
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: chat-bot-secrets
                   key: jwt-secret
-                
       restartPolicy: Always

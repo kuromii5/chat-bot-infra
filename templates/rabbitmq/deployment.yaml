@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Values.rabbitmq.name }}
-  annotations:
-    "helm.sh/chart-weight": "1"
 spec:
   replicas: 1
   selector:
@@ -31,29 +29,29 @@ spec:
                   key: rabbitmq-password
             - name: RABBITMQ_DEFAULT_USER
               value: {{ .Values.rabbitmq.user }}
-          # livenessProbe:
-          #   exec:
-          #     command:
-          #       - rabbitmq-diagnostics -q ping
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 10
-          #   timeoutSeconds: 5
-          # readinessProbe:
-          #   exec:
-          #     command:
-          #       - rabbitmq-diagnostics -q ping
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - rabbitmq-diagnostics
+                - -q
+                - ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - rabbitmq-diagnostics
+                - -q
+                - ping
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 3
           volumeMounts:
             - mountPath: /var/lib/rabbitmq
               name: rabbitmq-data
-          # resources:
-          #   requests:
-          #     memory: 256Mi
-          #     cpu: 100m
-          #   limits:
-          #     memory: 1024Mi
-          #     cpu: 500m
       restartPolicy: Always
       volumes:
         - name: rabbitmq-data
