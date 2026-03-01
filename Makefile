@@ -14,15 +14,6 @@ SECRETS       = secrets-local.yaml
 prepare:
 	@minikube status > /dev/null 2>&1 || minikube start
 
-# Create GHCR pull secret for private image access.
-# Usage: GHCR_USER=yourname GHCR_TOKEN=ghp_xxx make pull-secret
-pull-secret:
-	kubectl create secret docker-registry ghcr-pull-secret \
-		--docker-server=ghcr.io \
-		--docker-username=$(GHCR_USER) \
-		--docker-password=$(GHCR_TOKEN) \
-		--dry-run=client -o yaml | kubectl apply -f -
-
 all: prepare clean obs-install up
 
 up:
