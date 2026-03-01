@@ -32,7 +32,7 @@ db:
     password: ""
 
 migrator:
-  image: ghcr.io/kuromii5/chat-bot-migrations:v1.2
+  image: ghcr.io/kuromii5/chat-bot-migrations:v1.4
 
 rabbitmq:
   name: chat-bot-rabbitmq
@@ -46,11 +46,11 @@ rabbitmq:
 
 authService:
   tracing:
-    endpoint: "otel-collector.default.svc.cluster.local:4317"
+    endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
     sampler: 1.0
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.6
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.7
   port: 8080
   jwt:
     secret: ""
@@ -62,11 +62,11 @@ authService:
 
 chatService:
   tracing:
-    endpoint: "otel-collector.default.svc.cluster.local:4317"
+    endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
     sampler: 1.0
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v1.6
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v2.0
   port: 8081
   jwt:
     secret: ""
