@@ -11,6 +11,19 @@ ingress:
   host: chat-bot.local
   monitoringHost: monitoring.local
   jaegerHost: jaeger.local
+  rabbitmqHost: rabbitmq.local
+
+jaeger:
+  host: jaeger
+  port: 16686
+
+monitoring:
+  grafana:
+    host: monitoring-grafana
+    port: 80
+  prometheus:
+    host: monitoring-kube-prometheus-prometheus
+    port: 9090
 
 db:
   name: chat-bot-db

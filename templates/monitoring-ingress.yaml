@@ -14,13 +14,13 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: monitoring-grafana
+            name: {{ .Values.monitoring.grafana.host }}
             port:
-              number: 80
+              number: {{ .Values.monitoring.grafana.port }}
       - path: /prometheus
         pathType: Prefix
         backend:
           service:
-            name: monitoring-kube-prometheus-prometheus
+            name: {{ .Values.monitoring.prometheus.host }}
             port:
-              number: 9090
+              number: {{ .Values.monitoring.prometheus.port }}
