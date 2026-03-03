@@ -2,7 +2,7 @@ name: Infrastructure Lint
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: ["main", "dev"]
   pull_request:
 
 jobs:
@@ -19,3 +19,6 @@ jobs:
 
       - name: Helm Lint
         run: helm lint .
+
+      - name: Helm Template
+        run: helm template chat-bot-app . > /dev/null
