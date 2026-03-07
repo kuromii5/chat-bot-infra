@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.notificationService.name }}-env"
+data:
+  DB_HOST:    {{ .Values.db.host }}
+  DB_NAME:    {{ .Values.db.name }}
+  DB_PORT:    "{{ .Values.db.port }}"
+  DB_USER:    {{ .Values.db.app.user }}
+  DB_SSLMODE: {{ .Values.db.sslmode }}
+
+  KAFKA_BROKERS:  "{{ .Values.kafka.host }}:{{ .Values.kafka.port }}"
+  KAFKA_GROUP_ID: {{ .Values.notificationService.kafka.groupID }}
+  KAFKA_TOPIC:    {{ .Values.notificationService.kafka.topic }}
+
+  SMTP_HOST: {{ .Values.notificationService.smtp.host }}
+  SMTP_PORT: "{{ .Values.notificationService.smtp.port }}"
+  SMTP_FROM: {{ .Values.notificationService.smtp.from }}
+
+  LOG_LEVEL: {{ .Values.notificationService.logLevel }}
+
+  TRACING_ENDPOINT: {{ .Values.notificationService.tracing.endpoint }}
+  TRACING_SAMPLER:  "{{ .Values.notificationService.tracing.sampler }}"

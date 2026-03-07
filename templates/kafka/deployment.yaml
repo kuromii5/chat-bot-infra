@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.kafka.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      containers:
+        - name: kafka-container
+          image: {{ .Values.kafka.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.kafka.port }}
+            - containerPort: {{ .Values.kafka.controllerPort }}
+          env:
+            - name: KAFKA_CFG_NODE_ID
+              value: "0"
+            - name: KAFKA_CFG_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CFG_LISTENERS
+              value: "PLAINTEXT://:{{ .Values.kafka.port }},CONTROLLER://:{{ .Values.kafka.controllerPort }}"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "0@{{ .Values.kafka.host }}:{{ .Values.kafka.controllerPort }}"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://{{ .Values.kafka.host }}:{{ .Values.kafka.port }}"
+            - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+              value: "true"
+            - name: KAFKA_CFG_LOG_RETENTION_HOURS
+              value: "168"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.kafka.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.kafka.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 3
+          volumeMounts:
+            - mountPath: /bitnami/kafka
+              name: kafka-data
+      restartPolicy: Always
+      volumes:
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: kafka-data

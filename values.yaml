@@ -57,6 +57,14 @@ rabbitmq:
   port: 5672
   managementPort: 15672
 
+kafka:
+  name: chat-bot-kafka
+  host: kafka-service
+  image: bitnami/kafka:3.9
+  port: 9092
+  controllerPort: 9093
+  storage: 500Mi
+
 authService:
   tracing:
     endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
@@ -86,6 +94,22 @@ chatService:
   logLevel: "info"
   metricsPort: 9000
   serverHost: "0.0.0.0"
+
+notificationService:
+  tracing:
+    endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
+    sampler: 1.0
+  name: notification-service
+  host: notification-service
+  image: ghcr.io/kuromii5/notification-service:v1.0
+  logLevel: "info"
+  kafka:
+    groupID: notification-service
+    topic: notifications
+  smtp:
+    host: ""
+    port: 587
+    from: ""
 
 # MONITORING
 

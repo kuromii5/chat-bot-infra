@@ -13,6 +13,8 @@ data:
 
   RABBITMQ_EXCHANGE: {{ .Values.rabbitmq.exchange }}
 
+  KAFKA_BROKERS: "{{ .Values.kafka.host }}:{{ .Values.kafka.port }}"
+
   SERVER_HOST:  {{ .Values.chatService.serverHost }}
   SERVER_PORT:  "{{ .Values.chatService.port }}"
   METRICS_PORT: "{{ .Values.chatService.metricsPort }}"
