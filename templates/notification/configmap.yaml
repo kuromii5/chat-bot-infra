@@ -21,3 +21,4 @@ data:
 
   TRACING_ENDPOINT: {{ .Values.notificationService.tracing.endpoint }}
   TRACING_SAMPLER:  "{{ .Values.notificationService.tracing.sampler }}"
+  METRICS_PORT:     "{{ .Values.notificationService.metricsPort }}"

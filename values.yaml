@@ -103,6 +103,7 @@ notificationService:
   host: notification-service
   image: ghcr.io/kuromii5/notification-service:v1.0
   logLevel: "info"
+  metricsPort: 9000
   kafka:
     groupID: notification-service
     topic: notifications

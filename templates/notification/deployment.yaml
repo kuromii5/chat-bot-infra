@@ -27,6 +27,21 @@ spec:
         - name: notification-container
           image: {{ .Values.notificationService.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - name: metrics
+              containerPort: {{ .Values.notificationService.metricsPort }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.notificationService.metricsPort }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.notificationService.metricsPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
           envFrom:
             - configMapRef:
                 name: "{{ .Values.notificationService.name }}-env"
