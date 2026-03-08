@@ -11,6 +11,8 @@ data:
     }
 
     http {
+        server_tokens off;
+
         # Rate limiting zones (per client IP)
         # login: 10 requests/minute — brute force protection
         # register: 5 requests/minute — spam registration protection
