@@ -22,23 +22,25 @@ spec:
             - containerPort: {{ .Values.kafka.port }}
             - containerPort: {{ .Values.kafka.controllerPort }}
           env:
-            - name: KAFKA_CFG_NODE_ID
-              value: "0"
-            - name: KAFKA_CFG_PROCESS_ROLES
-              value: "controller,broker"
-            - name: KAFKA_CFG_LISTENERS
+            - name: KAFKA_NODE_ID
+              value: "1"
+            - name: KAFKA_PROCESS_ROLES
+              value: "broker,controller"
+            - name: KAFKA_LISTENERS
               value: "PLAINTEXT://:{{ .Values.kafka.port }},CONTROLLER://:{{ .Values.kafka.controllerPort }}"
-            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
-            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
-              value: "CONTROLLER"
-            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
-              value: "0@{{ .Values.kafka.host }}:{{ .Values.kafka.controllerPort }}"
-            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+            - name: KAFKA_ADVERTISED_LISTENERS
               value: "PLAINTEXT://{{ .Values.kafka.host }}:{{ .Values.kafka.port }}"
-            - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
+            - name: KAFKA_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CONTROLLER_QUORUM_VOTERS
+              value: "1@localhost:{{ .Values.kafka.controllerPort }}"
+            - name: KAFKA_LOG_DIRS
+              value: "/var/lib/kafka/data"
+            - name: KAFKA_AUTO_CREATE_TOPICS_ENABLE
               value: "true"
-            - name: KAFKA_CFG_LOG_RETENTION_HOURS
+            - name: KAFKA_LOG_RETENTION_HOURS
               value: "168"
           livenessProbe:
             tcpSocket:
@@ -53,7 +55,7 @@ spec:
             periodSeconds: 5
             failureThreshold: 3
           volumeMounts:
-            - mountPath: /bitnami/kafka
+            - mountPath: /var/lib/kafka/data
               name: kafka-data
       restartPolicy: Always
       volumes:

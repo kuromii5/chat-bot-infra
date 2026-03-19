@@ -60,7 +60,7 @@ rabbitmq:
 kafka:
   name: chat-bot-kafka
   host: kafka-service
-  image: bitnami/kafka:3.9
+  image: apache/kafka:4.2.0
   port: 9092
   controllerPort: 9093
   storage: 500Mi
@@ -71,7 +71,7 @@ authService:
     sampler: 1.0
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v1.8
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v2.11
   port: 8080
   jwt:
     secret: ""
@@ -87,7 +87,7 @@ chatService:
     sampler: 1.0
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v2.01
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v2.14
   port: 8081
   jwt:
     secret: ""
@@ -101,7 +101,7 @@ notificationService:
     sampler: 1.0
   name: notification-service
   host: notification-service
-  image: ghcr.io/kuromii5/notification-service:v1.0
+  image: ghcr.io/kuromii5/chat-bot-notification-service:v1.0
   logLevel: "info"
   metricsPort: 9000
   kafka:
