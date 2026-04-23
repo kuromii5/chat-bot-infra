@@ -77,7 +77,7 @@ authService:
     sampler: 1.0
   name: auth-service
   host: auth-service
-  image: ghcr.io/kuromii5/chat-bot-auth-service:v2.11
+  image: ghcr.io/kuromii5/chat-bot-auth-service:v2.12
   port: 8080
   grpcPort: 50051
   jwt:
@@ -108,7 +108,7 @@ notificationService:
     sampler: 1.0
   name: notification-service
   host: notification-service
-  image: ghcr.io/kuromii5/chat-bot-notification-service:v1.0
+  image: ghcr.io/kuromii5/chat-bot-notification-service:v1.1
   logLevel: "info"
   metricsPort: 9000
   kafka:
