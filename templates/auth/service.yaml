@@ -9,6 +9,9 @@ spec:
     - name: http
       port: {{ .Values.authService.port }}
       targetPort: {{ .Values.authService.port }}
+    - name: grpc
+      port: {{ .Values.authService.grpcPort }}
+      targetPort: {{ .Values.authService.grpcPort }}
     - name: metrics
       port: {{ .Values.authService.metricsPort }}
       targetPort: {{ .Values.authService.metricsPort }}

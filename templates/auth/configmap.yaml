@@ -16,6 +16,7 @@ data:
 
   SERVER_HOST: {{ .Values.authService.serverHost }}
   SERVER_PORT: "{{ .Values.authService.port }}"
+  GRPC_PORT: "{{ .Values.authService.grpcPort }}"
   METRICS_PORT: "{{ .Values.authService.metricsPort }}"
 
   TRACING_ENDPOINT: {{ .Values.authService.tracing.endpoint }}

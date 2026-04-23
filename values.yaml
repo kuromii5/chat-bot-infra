@@ -65,6 +65,12 @@ kafka:
   controllerPort: 9093
   storage: 500Mi
 
+debezium:
+  name: chat-bot-debezium
+  host: debezium-service
+  image: debezium/connect:2.7.3.Final
+  port: 8083
+
 authService:
   tracing:
     endpoint: "otel-collector-opentelemetry-collector.default.svc.cluster.local:4317"
@@ -73,6 +79,7 @@ authService:
   host: auth-service
   image: ghcr.io/kuromii5/chat-bot-auth-service:v2.11
   port: 8080
+  grpcPort: 50051
   jwt:
     secret: ""
     accessTokenExpiry: "30m"
@@ -87,7 +94,7 @@ chatService:
     sampler: 1.0
   name: chat-service
   host: chat-service
-  image: ghcr.io/kuromii5/chat-bot-chat-service:v2.14
+  image: ghcr.io/kuromii5/chat-bot-chat-service:v2.15
   port: 8081
   jwt:
     secret: ""
