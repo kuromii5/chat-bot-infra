@@ -18,6 +18,14 @@ spec:
         - name: db-container
           image: {{ .Values.db.image }}
           imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command:
+            - docker-entrypoint.sh
+            - -c
+            - wal_level=logical
+            - -c
+            - max_replication_slots=10
+            - -c
+            - max_wal_senders=10
           ports:
             - containerPort: {{ .Values.db.port }}
           env:

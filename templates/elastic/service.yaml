@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.elastic.host }}
+spec:
+  ports:
+    - name: "{{ .Values.elastic.port }}"
+      port: {{ .Values.elastic.port }}
+      targetPort: {{ .Values.elastic.port }}
+  selector:
+    app: elastic

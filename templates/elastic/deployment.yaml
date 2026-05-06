@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.elastic.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elastic
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: elastic
+    spec:
+      containers:
+        - name: elastic-container
+          image: {{ .Values.elastic.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.elastic.port }}
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: xpack.security.enabled
+              value: "false"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+          livenessProbe:
+            httpGet:
+              path: /_cluster/health
+              port: {{ .Values.elastic.port }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /_cluster/health?wait_for_status=yellow
+              port: {{ .Values.elastic.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            - mountPath: /usr/share/elasticsearch/data
+              name: elastic-data
+      restartPolicy: Always
+      volumes:
+        - name: elastic-data
+          persistentVolumeClaim:
+            claimName: elastic-data

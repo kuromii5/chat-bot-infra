@@ -68,8 +68,15 @@ kafka:
 debezium:
   name: chat-bot-debezium
   host: debezium-service
-  image: debezium/connect:2.7.3.Final
+  image: ghcr.io/kuromii5/chat-bot-debezium:latest
   port: 8083
+
+elastic:
+  name: chat-bot-elastic
+  host: elastic-service
+  image: elasticsearch:8.13.4
+  port: 9200
+  storage: 1Gi
 
 authService:
   tracing:

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.debezium.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debezium
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: debezium
+    spec:
+      containers:
+        - name: debezium-container
+          image: {{ .Values.debezium.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.debezium.port }}
+          env:
+            - name: BOOTSTRAP_SERVERS
+              value: "{{ .Values.kafka.host }}:{{ .Values.kafka.port }}"
+            - name: GROUP_ID
+              value: debezium-connect
+
+            - name: CONFIG_STORAGE_TOPIC
+              value: debezium-configs
+            - name: CONFIG_STORAGE_REPLICATION_FACTOR                                                       
+              value: "1"  
+
+            - name: OFFSET_STORAGE_TOPIC
+              value: debezium-offsets
+            - name: OFFSET_STORAGE_REPLICATION_FACTOR                                                       
+              value: "1"
+
+            - name: STATUS_STORAGE_TOPIC
+              value: debezium-status
+            - name: STATUS_STORAGE_REPLICATION_FACTOR                                                       
+              value: "1"
+
+            - name: KEY_CONVERTER_SCHEMAS_ENABLE                                                            
+              value: "false"                    
+            - name: VALUE_CONVERTER_SCHEMAS_ENABLE                                                          
+              value: "false"
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.debezium.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.debezium.port }}
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 3
+      restartPolicy: Always
