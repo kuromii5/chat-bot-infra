@@ -65,12 +65,6 @@ kafka:
   controllerPort: 9093
   storage: 500Mi
 
-debezium:
-  name: chat-bot-debezium
-  host: debezium-service
-  image: ghcr.io/kuromii5/chat-bot-debezium:latest
-  port: 8083
-
 elastic:
   name: chat-bot-elastic
   host: elastic-service
