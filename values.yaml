@@ -118,6 +118,7 @@ notificationService:
   smtp:
     host: ""
     port: 587
+    username: ""
     from: ""
 
 # MONITORING

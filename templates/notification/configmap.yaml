@@ -15,6 +15,7 @@ data:
 
   SMTP_HOST: {{ .Values.notificationService.smtp.host }}
   SMTP_PORT: "{{ .Values.notificationService.smtp.port }}"
+  SMTP_USERNAME: {{ .Values.notificationService.smtp.username | default "" | quote }}
   SMTP_FROM: {{ .Values.notificationService.smtp.from }}
 
   LOG_LEVEL: {{ .Values.notificationService.logLevel }}
