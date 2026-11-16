@@ -89,7 +89,9 @@ spec:
             - mountPath: /docker-entrypoint-initdb.d/init.sh
               name: db-init-volume
               subPath: init.sh
-            - mountPath: /var/lib/postgresql/data
+            # postgres:18+ stores data in /var/lib/postgresql/<major>/docker,
+            # so the volume must cover the parent directory.
+            - mountPath: /var/lib/postgresql
               name: pg-data
       restartPolicy: Always
       volumes:

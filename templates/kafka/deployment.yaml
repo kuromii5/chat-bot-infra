@@ -42,6 +42,17 @@ spec:
               value: "true"
             - name: KAFKA_LOG_RETENTION_HOURS
               value: "168"
+            # Single-broker cluster: the internal topics must not default to
+            # replication factor 3, otherwise consumer groups never get a
+            # coordinator ("Group Coordinator Not Available").
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "1"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "1"
+            - name: KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS
+              value: "0"
           livenessProbe:
             tcpSocket:
               port: {{ .Values.kafka.port }}
