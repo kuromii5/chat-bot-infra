@@ -82,8 +82,8 @@ SMTP-значения — заглушки. Для реальной отправ
 
 - `ghcr.io/kuromii5/chat-bot-auth-service:v2.13`
 - `ghcr.io/kuromii5/chat-bot-chat-service:v2.16`
-- `ghcr.io/kuromii5/chat-bot-notification-service:v1.2`
-- `ghcr.io/kuromii5/chat-bot-migrations:v1.4`
+- `ghcr.io/kuromii5/chat-bot-notification-service:v1.3`
+- `ghcr.io/kuromii5/chat-bot-migrations:v1.5`
 
 Проверено: манифесты отдаются анонимно (HTTP 200), pull-secret не обязателен.
 Если пакеты станут приватными, `bootstrap-local.sh` создаст секрет при наличии
@@ -147,36 +147,25 @@ WebSocket `/api/v1/chat/ws`.
 
 ## 8. Известные ограничения чарта
 
-1. **`/api/v1/users/preferences` не проксируется gateway.** Используйте
-   `./scripts/port-forward.sh` и `http://localhost:8082/api/v1/users/preferences`.
-2. **`ghcr-pull-secret` упоминается в deployment'ах, но не создаётся Makefile.**
+1. **`ghcr-pull-secret` упоминается в deployment'ах, но не создаётся Makefile.**
    Для публичных образов это только предупреждение.
-3. **SMTP username не прокидывается** в `templates/notification/configmap.yaml`.
-4. **Notification tracing**: ConfigMap задаёт `TRACING_*`, код читает `OTEL_*`.
-5. **`make all` и `make clean` удаляют все PVC в namespace** — это полный сброс данных.
-6. **`make prepare` не включает ingress-addon** — это делает `bootstrap-local.sh`.
-7. **Версии observability-чартов не зафиксированы** в Makefile.
-8. **Elasticsearch не используется** Go-кодом, но потребляет память. При нехватке
+2. **`make all` и `make clean` удаляют все PVC в namespace** — это полный сброс данных.
+3. **`make prepare` не включает ingress-addon** — это делает `bootstrap-local.sh`.
+4. **Версии observability-чартов не зафиксированы** в Makefile.
+5. **Elasticsearch не используется** Go-кодом, но потребляет память. При нехватке
    RAM можно уменьшить `MINIKUBE_MEMORY` или убрать elastic из чарта.
-9. **Образ `chat-bot-migrations:v1.4` в GHCR устарел**: в нём миграции только до
-   009, а репозиторий содержит 010 и 011 (010 нужна auth-service). Если БД уже
-   содержит 010/011, `make up` упадёт с `unknown migration in database`.
-   Локальная сборка и загрузка в minikube (обычный Dockerfile репозитория —
-   `Dockerfile.migrate`):
-   ```bash
-   cd ../chat-bot-migrations
-   docker build -f Dockerfile.migrate \
-     -t ghcr.io/kuromii5/chat-bot-migrations:v1.4 .
-   minikube image load ghcr.io/kuromii5/chat-bot-migrations:v1.4 --overwrite
-   ```
-   После пересоздания minikube образ нужно загрузить снова.
-   Когда CI выпустит новый тег (например `v1.5`), обновите `values.yaml` —
-   локальная сборка больше не понадобится.
-10. **`migrator` — pre-upgrade hook.** Если PVC `pg-data` удалён, helm-хук ждёт
-    `db`, а PVC создаётся только после хука — дедлок. Обход:
-    `helm upgrade --install ... --no-hooks`, дождаться `db`, затем `make up`.
-11. **Kafka однонодовая.** В чарте зафиксированы replication factor = 1 для
-    внутренних топиков; без этого consumer group не работает.
+6. **`migrator` — pre-upgrade hook.** Если PVC `pg-data` удалён, helm-хук ждёт
+   `db`, а PVC создаётся только после хука — дедлок. Обход:
+   `helm upgrade --install ... --no-hooks`, дождаться `db`, затем `make up`.
+7. **Kafka однонодовая.** В чарте зафиксированы replication factor = 1 для
+   внутренних топиков; без этого consumer group не работает.
+8. **Все сервисы в одной реплике**, HPA/PDB нет; QoS-классы — в основном
+   BestEffort (requests/limits не заданы).
+9. **Локальная пересборка образов** нужна только при изменениях в коде сервисов.
+   Опубликованы `chat-bot-migrations:v1.5` и
+   `chat-bot-notification-service:v1.3`; собирать вручную не требуется.
+   Если собираете локально — тег должен совпадать с `values.yaml`, а образ нужно
+   загрузить в minikube (`minikube image load ... --overwrite`).
 
 ## 9. Требования к ресурсам
 
