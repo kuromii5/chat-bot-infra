@@ -161,14 +161,17 @@ WebSocket `/api/v1/chat/ws`.
 9. **Образ `chat-bot-migrations:v1.4` в GHCR устарел**: в нём миграции только до
    009, а репозиторий содержит 010 и 011 (010 нужна auth-service). Если БД уже
    содержит 010/011, `make up` упадёт с `unknown migration in database`.
-   Локальная сборка и загрузка в minikube:
+   Локальная сборка и загрузка в minikube (обычный Dockerfile репозитория —
+   `Dockerfile.migrate`):
    ```bash
    cd ../chat-bot-migrations
-   docker build -f ../chat-bot-infra/scripts/Dockerfile.migrator-local \
+   docker build -f Dockerfile.migrate \
      -t ghcr.io/kuromii5/chat-bot-migrations:v1.4 .
    minikube image load ghcr.io/kuromii5/chat-bot-migrations:v1.4 --overwrite
    ```
    После пересоздания minikube образ нужно загрузить снова.
+   Когда CI выпустит новый тег (например `v1.5`), обновите `values.yaml` —
+   локальная сборка больше не понадобится.
 10. **`migrator` — pre-upgrade hook.** Если PVC `pg-data` удалён, helm-хук ждёт
     `db`, а PVC создаётся только после хука — дедлок. Обход:
     `helm upgrade --install ... --no-hooks`, дождаться `db`, затем `make up`.
